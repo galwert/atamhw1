@@ -23,14 +23,16 @@ addl %r13d, %r11d
 addl %edx, %r11d
 cmpl $0, %r11d
 je Exit
+cmpl $0, %r13d
+je L0
 
-cmpl %r13d, %edx
+cmp %r13, %rdx
 jge L0
-# edx < r13d
+# edx < r13d / write r13d
 movl %r13d, %r12d # save last number
 inc %r15
 jmp Write
-L0: # edx >= r13d
+L0: # edx >= r13d / write edx
 movl %edx, %r12d # save last number
 inc %r10
 Write:
@@ -39,6 +41,8 @@ je Loop
 movl %r12d, (%r14, %rax, 4) # mergedArr[i] = r12
 inc %rax # rax++
 jmp Loop
+
+
 Exit:
 movl $0, (%r14, %rax, 4) # mergedArr[i+1] = 0
 
