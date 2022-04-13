@@ -33,6 +33,11 @@ Found_Src:
 cmpq $0, %r9
 jne Exit
 movq %r8, %r9
+cmpq $0, %r8
+jne src_not_head
+movq $-1, %r9
+
+src_not_head:
 movq %rax, %r8
 leaq 8(%rax), %rax
 movq (%rax), %rax
@@ -42,16 +47,25 @@ Found_Dst:
 cmpq $0, %r10
 jne Exit
 movq %r8, %r10
+cmpq $0, %r8
+jne dst_not_head
+movq $-1, %r10
+
+dst_not_head:
 movq %rax, %r8
 leaq 8(%rax), %rax
 movq (%rax), %rax
 jmp Iteration
 
 Finished:
-cmpq $0, %r9
+cmpq $-1, %r9
 je src_is_head
-cmpq $0, %r10
+cmpq $-1, %r10
 je dst_is_head
+cmpq $0, %r9
+je Exit
+cmpq $0, %r10
+je Exit
 
 leaq 8(%r10), %r10
 leaq 8(%r9), %r9
@@ -78,19 +92,18 @@ movq (%r12), %r12
 movq (%r12), %r12
 cmpq %r12, %rbx
 jne Exit
-cmpq $0, %r10
-je Exit
+
 leaq 8(%r10), %r10
 movq $(head), %r9
 jmp second_switch
+
 dst_is_head:
 movq $(head), %r12
 movq (%r12), %r12
 movq (%r12), %r12
 cmpq %r12, %rcx
 jne Exit
-cmpq $0, %r9
-je Exit
+
 leaq 8(%r9), %r9
 movq $(head), %r10
 jmp second_switch
