@@ -58,14 +58,15 @@ movq (%rax), %rax
 jmp Iteration
 
 Finished:
-cmpq $-1, %r9
-je src_is_head
-cmpq $-1, %r10
-je dst_is_head
 cmpq $0, %r9
 je Exit
 cmpq $0, %r10
 je Exit
+cmpq $-1, %r9
+je src_is_head
+cmpq $-1, %r10
+je dst_is_head
+
 
 leaq 8(%r10), %r10
 leaq 8(%r9), %r9
